@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Inoxia</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+
+    <string name="scan">Barcode Scanner</string>
+    <string name="inventory">Inventory</string>
+    <string name="add">Add product(s)</string>
+    <string name="remove">Remove product(s)</string>
+
+</resources>
