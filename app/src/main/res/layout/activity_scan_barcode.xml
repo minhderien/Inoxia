@@ -2,11 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:weightSum="1">
 
     <SurfaceView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/camera_preview" />
+        android:layout_height="176dp"
+        android:id="@+id/camera_preview"
+        android:layout_weight="0.22" />
+
+    <TextView
+        android:text="Barcode and every info (picture, amount, price)"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtBarcodeInfos"
+        android:textAlignment="center"
+        android:textSize="18sp"
+        android:textColor="@color/common_google_signin_btn_text_dark_focused"
+        android:layout_weight="0.91" />
 
 </LinearLayout>

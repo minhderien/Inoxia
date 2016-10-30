@@ -11,4 +11,10 @@
     <string name="add">Add product(s)</string>
     <string name="remove">Remove product(s)</string>
 
+    <string name="speedtiles">SpeedTiles</string>
+    <string name="speedtilesback">Backsplashes SpeedTiles</string>
+    <string name="backsplashes">Backsplashes</string>
+    <string name="loft">Loft series</string>
+    <string name="care">Care products</string>
+
 </resources>
