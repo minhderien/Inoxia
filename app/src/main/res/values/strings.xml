@@ -10,6 +10,8 @@
     <string name="inventory">Inventory</string>
     <string name="add">Add product(s)</string>
     <string name="remove">Remove product(s)</string>
+    <string name="share">Share</string>
+    <string name="send">Send</string>
 
     <string name="speedtiles">SpeedTiles</string>
     <string name="speedtilesback">Backsplashes SpeedTiles</string>
@@ -17,4 +19,13 @@
     <string name="loft">Loft series</string>
     <string name="care">Care products</string>
 
+    <!-- Toolbar titles when navigation menu item is selected -->
+    <string-array name="nav_item_activity_titles">
+        <item>@string/scan</item>
+        <item>@string/inventory</item>
+        <item>@string/add</item>
+        <item>@string/remove</item>
+        <item>@string/share</item>
+        <item>@string/send</item>
+    </string-array>
 </resources>

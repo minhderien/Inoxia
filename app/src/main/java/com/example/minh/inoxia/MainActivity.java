@@ -34,8 +34,12 @@ import static com.example.minh.inoxia.R.layout.activity_main;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    String barcodeResult = "";
-    Button boutSpeedtiles, boutBackSpeed, boutBacksplashes, boutLoft, boutCare;
+    private NavigationView navigationView;
+
+    private String barcodeResult = "";
+    private Button boutSpeedtiles, boutBackSpeed, boutBacksplashes, boutLoft, boutCare;
+
+    public static int navItemIndex = 1;
 
 
     @Override
@@ -61,10 +65,9 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
         recupererComposante();
         ecouterComposante();
+        selectNavMenu();
     }
 
     public void recupererComposante() {
@@ -73,6 +76,8 @@ public class MainActivity extends AppCompatActivity
         boutBacksplashes = (Button) findViewById(R.id.boutBacksplashes);
         boutLoft = (Button) findViewById(R.id.boutLoft);
         boutCare = (Button) findViewById(R.id.boutCare);
+
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
     }
 
     public void ecouterComposante() {
@@ -81,6 +86,11 @@ public class MainActivity extends AppCompatActivity
         boutBacksplashes.setOnClickListener(buttonListener);
         boutLoft.setOnClickListener(buttonListener);
         boutCare.setOnClickListener(buttonListener);
+        navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    private void selectNavMenu() {
+        navigationView.getMenu().getItem(navItemIndex).setChecked(true);
     }
 
     @Override
@@ -183,18 +193,19 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_scan) {
             // Handle the camera action
+            navItemIndex = 0;
             startActivityForResult(intent, 0);
 
         } else if (id == R.id.nav_inventory) {
-
+            navItemIndex = 1;
         } else if (id == R.id.nav_add) {
-
+            navItemIndex = 2;
         } else if (id == R.id.nav_remove) {
-
+            navItemIndex = 3;
         } else if (id == R.id.nav_share) {
-
+            navItemIndex = 4;
         } else if (id == R.id.nav_send) {
-
+            navItemIndex = 5;
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
