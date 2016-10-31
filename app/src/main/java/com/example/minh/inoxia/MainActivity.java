@@ -169,20 +169,12 @@ public class MainActivity extends AppCompatActivity
         // set toolbar title
         //setToolbarTitle();
 
-        // if user select the current navigation menu again, don't do anything
-        // just close the navigation drawer
         if (getSupportFragmentManager().findFragmentByTag(CURRENT_TAG) != null) {
             drawer.closeDrawers();
 
-            // show or hide the fab button
-            //toggleFab();
             return;
         }
 
-        // Sometimes, when fragment has huge data, screen seems hanging
-        // when switching between navigation menus
-        // So using runnable, the fragment is loaded with cross fade effect
-        // This effect can be seen in GMail app
         Runnable mPendingRunnable = new Runnable() {
             @Override
             public void run() {
@@ -216,19 +208,6 @@ public class MainActivity extends AppCompatActivity
             case 1:
                 InventoryFragment inventory = new InventoryFragment();
                 return inventory;
-            /*case 2:
-                // movies fragment
-                MoviesFragment moviesFragment = new MoviesFragment();
-                return moviesFragment;
-            case 3:
-                // notifications fragment
-                NotificationsFragment notificationsFragment = new NotificationsFragment();
-                return notificationsFragment;
-
-            case 4:
-                // settings fragment
-                SettingsFragment settingsFragment = new SettingsFragment();
-                return settingsFragment;*/
             default:
                 return new InventoryFragment();
         }

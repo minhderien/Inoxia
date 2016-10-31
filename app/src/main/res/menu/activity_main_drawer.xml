@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_scan"
@@ -9,8 +8,7 @@
         <item
             android:id="@+id/nav_inventory"
             android:icon="@drawable/ic_assignment"
-            android:title="@string/inventory"
-            android:checked="true" />
+            android:title="@string/inventory" />
         <item
             android:id="@+id/nav_add"
             android:icon="@drawable/ic_add"
