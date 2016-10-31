@@ -1,0 +1,54 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.minh.inoxia.InventoryFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/inventory"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:textColor="@color/common_google_signin_btn_text_dark_focused" />
+
+        <Button
+            android:text="@string/speedtiles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/boutSpeedtiles" />
+
+        <Button
+            android:text="@string/speedtilesback"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/boutBackSpeed" />
+
+        <Button
+            android:text="@string/backsplashes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/boutBacksplashes" />
+
+        <Button
+            android:text="@string/loft"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/boutLoft" />
+
+        <Button
+            android:text="@string/care"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/boutCare" />
+
+    </LinearLayout>
+
+</FrameLayout>

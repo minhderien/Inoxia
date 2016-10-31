@@ -1,13 +1,18 @@
 package com.example.minh.inoxia;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -19,19 +24,20 @@ import com.google.android.gms.vision.CameraSource;
 import com.google.android.gms.vision.Detector;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
-import com.google.android.gms.vision.text.Text;
 
 import java.io.IOException;
-import java.util.jar.Manifest;
 
 /**
  * Created by Minh on 10/29/2016.
  */
 
-public class ScanBarcode extends Activity {
+public class ScanBarcode extends AppCompatActivity {
     private SurfaceView cameraPreview;
+    private Toolbar toolbar;
     private TextView txtInfos;
     private String code;
+    private MainActivity mainActivity;
+
     public static final int REQUEST_CAMERA = 1;
 
 
@@ -43,8 +49,28 @@ public class ScanBarcode extends Activity {
         cameraPreview = (SurfaceView) findViewById(R.id.camera_preview);
         txtInfos = (TextView) findViewById(R.id.txtBarcodeInfos);
 
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        if (toolbar != null) {
+            android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
+
         requestPermission();
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // handle arrow click here
+        if (item.getItemId() == android.R.id.home) {
+            mainActivity.navItemIndex = 1;
+            finish(); // close this activity and return to previous activity (if there is any)
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -81,7 +107,7 @@ public class ScanBarcode extends Activity {
         BarcodeDetector barcodeDetector = new BarcodeDetector.Builder(this).build();
         final CameraSource cameraSource = new CameraSource.Builder(this, barcodeDetector)
                 .setAutoFocusEnabled(true)
-                .setRequestedPreviewSize(1600, 1024)
+                .setRequestedPreviewSize(1280, 720)
                 .build();
 
 

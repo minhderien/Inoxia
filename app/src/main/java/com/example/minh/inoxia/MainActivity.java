@@ -3,10 +3,12 @@ package com.example.minh.inoxia;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
@@ -35,11 +37,20 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private NavigationView navigationView;
+    private DrawerLayout drawer;
 
     private String barcodeResult = "";
-    private Button boutSpeedtiles, boutBackSpeed, boutBacksplashes, boutLoft, boutCare;
+
 
     public static int navItemIndex = 1;
+
+    private Handler mHandler = new Handler();
+    private static final String TAG_INVENTORY = "inventory";
+    /*private static final String TAG_PHOTOS = "photos";
+    private static final String TAG_MOVIES = "movies";
+    private static final String TAG_NOTIFICATIONS = "notifications";
+    private static final String TAG_SETTINGS = "settings";*/
+    public static String CURRENT_TAG = TAG_INVENTORY;
 
 
     @Override
@@ -59,38 +70,62 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         recupererComposante();
         ecouterComposante();
+        loadDefaultFragment();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         selectNavMenu();
+
     }
 
     public void recupererComposante() {
-        boutSpeedtiles = (Button) findViewById(R.id.boutSpeedtiles);
+        /*boutSpeedtiles = (Button) findViewById(R.id.boutSpeedtiles);
         boutBackSpeed = (Button) findViewById(R.id.boutBackSpeed);
         boutBacksplashes = (Button) findViewById(R.id.boutBacksplashes);
         boutLoft = (Button) findViewById(R.id.boutLoft);
-        boutCare = (Button) findViewById(R.id.boutCare);
+        boutCare = (Button) findViewById(R.id.boutCare);*/
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
     }
 
     public void ecouterComposante() {
-        boutSpeedtiles.setOnClickListener(buttonListener);
+        /*boutSpeedtiles.setOnClickListener(buttonListener);
         boutBackSpeed.setOnClickListener(buttonListener);
         boutBacksplashes.setOnClickListener(buttonListener);
         boutLoft.setOnClickListener(buttonListener);
-        boutCare.setOnClickListener(buttonListener);
+        boutCare.setOnClickListener(buttonListener);*/
         navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void selectNavMenu() {
         navigationView.getMenu().getItem(navItemIndex).setChecked(true);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    Barcode barcode = data.getParcelableExtra("barcode");
+                    barcodeResult = barcode.displayValue;
+                    Log.e("MainActivity barcode", barcodeResult);
+
+                } else {
+                    Log.e("Barcode Result", "No barcode found");
+
+                }
+            }
+        }
     }
 
     @Override
@@ -101,6 +136,7 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+
     }
 
     @Override
@@ -125,62 +161,78 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 0) {
-            if (resultCode == CommonStatusCodes.SUCCESS) {
-                if (data != null) {
-                    Barcode barcode = data.getParcelableExtra("barcode");
-                    barcodeResult = barcode.displayValue;
-                    Log.e("MainActivity barcode", barcodeResult);
 
-                } else {
-                    Log.e("Barcode Result", "No barcode found");
+    private void loadDefaultFragment() {
+        // selecting appropriate nav menu item
+        selectNavMenu();
 
-                }
-            }
+        // set toolbar title
+        //setToolbarTitle();
+
+        // if user select the current navigation menu again, don't do anything
+        // just close the navigation drawer
+        if (getSupportFragmentManager().findFragmentByTag(CURRENT_TAG) != null) {
+            drawer.closeDrawers();
+
+            // show or hide the fab button
+            //toggleFab();
+            return;
         }
+
+        // Sometimes, when fragment has huge data, screen seems hanging
+        // when switching between navigation menus
+        // So using runnable, the fragment is loaded with cross fade effect
+        // This effect can be seen in GMail app
+        Runnable mPendingRunnable = new Runnable() {
+            @Override
+            public void run() {
+                // update the main content by replacing fragments
+                Fragment fragment = getChosenFragment();
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
+                        android.R.anim.fade_out);
+                fragmentTransaction.replace(R.id.relative_layout_fragment, fragment, CURRENT_TAG);
+                fragmentTransaction.commitAllowingStateLoss();
+            }
+        };
+
+        // If mPendingRunnable is not null, then add to the message queue
+        if (mPendingRunnable != null) {
+            mHandler.post(mPendingRunnable);
+        }
+
+        // show or hide the fab button
+        // toggleFab();
+
+        //Closing drawer on item click
+        drawer.closeDrawers();
+
+        // refresh toolbar menu
+        invalidateOptionsMenu();
     }
 
+    private Fragment getChosenFragment() {
+        switch (navItemIndex) {
+            case 1:
+                InventoryFragment inventory = new InventoryFragment();
+                return inventory;
+            /*case 2:
+                // movies fragment
+                MoviesFragment moviesFragment = new MoviesFragment();
+                return moviesFragment;
+            case 3:
+                // notifications fragment
+                NotificationsFragment notificationsFragment = new NotificationsFragment();
+                return notificationsFragment;
 
-    private View.OnClickListener buttonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View vue) {
-
-            /*Toast toast;
-            String message = "";
-
-                    Intent intent = new Intent(this, ScanBarcode.class);
-                    startActivityForResult(intent, 0);
-            toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
-            toast.show();*/
-            Intent intent = new Intent(getApplicationContext(), Products.class);
-            switch (vue.getId()) {
-
-                case R.id.boutSpeedtiles:
-                    startActivityForResult(intent, 0);
-                    break;
-
-                case R.id.boutBackSpeed:
-                    startActivityForResult(intent, 0);
-                    break;
-
-                case R.id.boutBacksplashes:
-                    startActivityForResult(intent, 0);
-                    break;
-                case R.id.boutLoft:
-                    startActivityForResult(intent, 0);
-                    break;
-                case R.id.boutCare:
-                    startActivityForResult(intent, 0);
-                    break;
-                default:
-                    break;
-            }
-
-
+            case 4:
+                // settings fragment
+                SettingsFragment settingsFragment = new SettingsFragment();
+                return settingsFragment;*/
+            default:
+                return new InventoryFragment();
         }
-    };
+    }
 
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -188,16 +240,19 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        Intent intent = new Intent(this, ScanBarcode.class);
 
 
         if (id == R.id.nav_scan) {
             // Handle the camera action
             navItemIndex = 0;
-            startActivityForResult(intent, 0);
-
+            Intent intent = new Intent(MainActivity.this, ScanBarcode.class);
+            startActivity(intent);
         } else if (id == R.id.nav_inventory) {
+            /*InventoryFragment inventory = new InventoryFragment();
+            FragmentManager manager = getSupportFragmentManager();
+            manager.beginTransaction().replace(R.id.relative_layout_fragment, inventory).commit();*/
             navItemIndex = 1;
+            CURRENT_TAG = TAG_INVENTORY;
         } else if (id == R.id.nav_add) {
             navItemIndex = 2;
         } else if (id == R.id.nav_remove) {
