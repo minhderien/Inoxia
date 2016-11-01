@@ -14,11 +14,12 @@ public class Splash extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //setContentView(R.layout.splash_layout);
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         finish();
 
-       /* Thread welcomeThread = new Thread() {
+        /*Thread welcomeThread = new Thread() {
             @Override
             public void run() {
                 try {

@@ -2,6 +2,7 @@ package com.example.minh.inoxia;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -31,6 +32,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 
+import static android.R.attr.windowBackground;
 import static com.example.minh.inoxia.R.layout.activity_main;
 
 public class MainActivity extends AppCompatActivity
@@ -38,19 +40,23 @@ public class MainActivity extends AppCompatActivity
 
     private NavigationView navigationView;
     private DrawerLayout drawer;
+    private boolean isHome = true;
 
     private String barcodeResult = "";
 
 
     public static int navItemIndex = 1;
+    public static int tmpNavIndex;
 
     private Handler mHandler = new Handler();
     private static final String TAG_INVENTORY = "inventory";
     private static final String TAG_ADD = "ADD";
     private static final String TAG_REMOVE = "remove";
-    /*private static final String TAG_NOTIFICATIONS = "notifications";
-    private static final String TAG_SETTINGS = "settings";*/
     public static String CURRENT_TAG = TAG_INVENTORY;
+
+    private String[] activityTitles;
+
+    private ScanBarcode scanBarcode;
 
 
     @Override
@@ -77,6 +83,7 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         recupererComposante();
+        initialiserComposante();
         ecouterComposante();
         loadFragment();
     }
@@ -85,30 +92,27 @@ public class MainActivity extends AppCompatActivity
     public void onResume() {
         super.onResume();
         selectNavMenu();
-
+        setToolbarTitle();
     }
 
     public void recupererComposante() {
-        /*boutSpeedtiles = (Button) findViewById(R.id.boutSpeedtiles);
-        boutBackSpeed = (Button) findViewById(R.id.boutBackSpeed);
-        boutBacksplashes = (Button) findViewById(R.id.boutBacksplashes);
-        boutLoft = (Button) findViewById(R.id.boutLoft);
-        boutCare = (Button) findViewById(R.id.boutCare);*/
-
         navigationView = (NavigationView) findViewById(R.id.nav_view);
     }
 
+    public void initialiserComposante() {
+        activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
+    }
+
     public void ecouterComposante() {
-        /*boutSpeedtiles.setOnClickListener(buttonListener);
-        boutBackSpeed.setOnClickListener(buttonListener);
-        boutBacksplashes.setOnClickListener(buttonListener);
-        boutLoft.setOnClickListener(buttonListener);
-        boutCare.setOnClickListener(buttonListener);*/
         navigationView.setNavigationItemSelectedListener(this);
     }
 
     private void selectNavMenu() {
         navigationView.getMenu().getItem(navItemIndex).setChecked(true);
+    }
+
+    private void setToolbarTitle() {
+        getSupportActionBar().setTitle(activityTitles[navItemIndex]);
     }
 
     @Override
@@ -133,11 +137,19 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+            return;
         }
-
+        if (isHome) {
+            if (navItemIndex != 1) {
+                navItemIndex = 1;
+                CURRENT_TAG = TAG_INVENTORY;
+                loadFragment();
+                return;
+            }
+        }
+        super.onBackPressed();
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -145,6 +157,7 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -163,11 +176,12 @@ public class MainActivity extends AppCompatActivity
 
 
     private void loadFragment() {
-        // selecting appropriate nav menu item
+        // setCheck l'onglet selectionner
         selectNavMenu();
 
-        // set toolbar title
-        //setToolbarTitle();
+        // met le bon titre a la toolbar
+        setToolbarTitle();
+        Log.d("JE load", "setting toolbar");
 
         if (getSupportFragmentManager().findFragmentByTag(CURRENT_TAG) != null) {
             drawer.closeDrawers();
@@ -178,7 +192,7 @@ public class MainActivity extends AppCompatActivity
         Runnable mPendingRunnable = new Runnable() {
             @Override
             public void run() {
-                // update the main content by replacing fragments
+                // Remplace le fragment present par lui choisi.
                 Fragment fragment = getChosenFragment();
                 Log.d("runnable", fragment + "");
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -227,7 +241,6 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-
         if (id == R.id.nav_scan) {
             // Handle the camera action
             navItemIndex = 0;
@@ -235,17 +248,22 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_inventory) {
             navItemIndex = 1;
+            scanBarcode.tempNavIndex = 1;
             CURRENT_TAG = TAG_INVENTORY;
         } else if (id == R.id.nav_add) {
             navItemIndex = 2;
+            scanBarcode.tempNavIndex = 2;
             CURRENT_TAG = TAG_ADD;
         } else if (id == R.id.nav_remove) {
             navItemIndex = 3;
+            scanBarcode.tempNavIndex = 3;
             CURRENT_TAG = TAG_REMOVE;
         } else if (id == R.id.nav_share) {
             navItemIndex = 4;
+            scanBarcode.tempNavIndex = 4;
         } else if (id == R.id.nav_send) {
             navItemIndex = 5;
+            scanBarcode.tempNavIndex = 5;
         }
 
         if (item.isChecked()) {

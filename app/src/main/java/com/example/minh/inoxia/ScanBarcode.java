@@ -36,7 +36,9 @@ public class ScanBarcode extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView txtInfos;
     private String code;
+
     private MainActivity mainActivity;
+    public static int tempNavIndex;
 
     public static final int REQUEST_CAMERA = 1;
 
@@ -63,16 +65,22 @@ public class ScanBarcode extends AppCompatActivity {
     }
 
     @Override
+    public void onBackPressed() {
+        mainActivity.navItemIndex = tempNavIndex;
+        finish();
+        super.onBackPressed();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here
         if (item.getItemId() == android.R.id.home) {
-            mainActivity.navItemIndex = 1;
+            mainActivity.navItemIndex = tempNavIndex;
             finish(); // close this activity and return to previous activity (if there is any)
         }
 
         return super.onOptionsItemSelected(item);
     }
-
 
     public void requestPermission() {
         if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
