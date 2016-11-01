@@ -234,23 +234,14 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(MainActivity.this, ScanBarcode.class);
             startActivity(intent);
         } else if (id == R.id.nav_inventory) {
-            /*InventoryFragment inventory = new InventoryFragment();
-            FragmentManager manager = getSupportFragmentManager();
-            manager.beginTransaction().replace(R.id.relative_layout_fragment, inventory).commit();*/
             navItemIndex = 1;
-            Log.d("navItemIndex", navItemIndex + "");
             CURRENT_TAG = TAG_INVENTORY;
-            Log.d("CURRENT_TAG", CURRENT_TAG + "");
         } else if (id == R.id.nav_add) {
             navItemIndex = 2;
-            Log.d("navItemIndex", navItemIndex + "");
             CURRENT_TAG = TAG_ADD;
-            Log.d("CURRENT_TAG", CURRENT_TAG + "");
         } else if (id == R.id.nav_remove) {
             navItemIndex = 3;
-            Log.d("navItemIndex", navItemIndex + "");
             CURRENT_TAG = TAG_REMOVE;
-            Log.d("CURRENT_TAG", CURRENT_TAG + "");
         } else if (id == R.id.nav_share) {
             navItemIndex = 4;
         } else if (id == R.id.nav_send) {
