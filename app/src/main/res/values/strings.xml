@@ -6,18 +6,23 @@
 
     <string name="action_settings">Settings</string>
 
+    <!-- Menu Item -->
     <string name="scan">Barcode Scanner</string>
     <string name="inventory">Inventory</string>
     <string name="add">Add product(s)</string>
     <string name="remove">Remove product(s)</string>
     <string name="share">Share</string>
     <string name="send">Send</string>
-
+    <!-- Product Categories -->
     <string name="speedtiles">SpeedTiles</string>
     <string name="speedtilesback">Backsplashes SpeedTiles</string>
     <string name="backsplashes">Backsplashes</string>
     <string name="loft">Loft series</string>
     <string name="care">Care products</string>
+
+    <!-- Add layout title -->
+    <string name="category">Product Category</string>
+    <string name="product">Product</string>
 
     <!-- Toolbar titles when navigation menu item is selected -->
     <string-array name="nav_item_activity_titles">

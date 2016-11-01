@@ -19,7 +19,6 @@ public class Splash extends AppCompatActivity {
         finish();
 
        /* Thread welcomeThread = new Thread() {
-
             @Override
             public void run() {
                 try {

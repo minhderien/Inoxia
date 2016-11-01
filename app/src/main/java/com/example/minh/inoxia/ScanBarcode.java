@@ -110,7 +110,8 @@ public class ScanBarcode extends AppCompatActivity {
                 .setRequestedPreviewSize(1280, 720)
                 .build();
 
-
+        cameraPreview.setFocusable(true);
+        cameraPreview.setFocusableInTouchMode(true);
         cameraPreview.getHolder().addCallback(new SurfaceHolder.Callback() {
             @Override
             public void surfaceCreated(SurfaceHolder holder) {

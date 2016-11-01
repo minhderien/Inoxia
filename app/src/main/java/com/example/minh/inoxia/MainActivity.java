@@ -46,9 +46,9 @@ public class MainActivity extends AppCompatActivity
 
     private Handler mHandler = new Handler();
     private static final String TAG_INVENTORY = "inventory";
-    /*private static final String TAG_PHOTOS = "photos";
-    private static final String TAG_MOVIES = "movies";
-    private static final String TAG_NOTIFICATIONS = "notifications";
+    private static final String TAG_ADD = "ADD";
+    private static final String TAG_REMOVE = "remove";
+    /*private static final String TAG_NOTIFICATIONS = "notifications";
     private static final String TAG_SETTINGS = "settings";*/
     public static String CURRENT_TAG = TAG_INVENTORY;
 
@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity
 
         recupererComposante();
         ecouterComposante();
-        loadDefaultFragment();
+        loadFragment();
     }
 
     @Override
@@ -162,7 +162,7 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-    private void loadDefaultFragment() {
+    private void loadFragment() {
         // selecting appropriate nav menu item
         selectNavMenu();
 
@@ -180,6 +180,7 @@ public class MainActivity extends AppCompatActivity
             public void run() {
                 // update the main content by replacing fragments
                 Fragment fragment = getChosenFragment();
+                Log.d("runnable", fragment + "");
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
                         android.R.anim.fade_out);
@@ -208,6 +209,12 @@ public class MainActivity extends AppCompatActivity
             case 1:
                 InventoryFragment inventory = new InventoryFragment();
                 return inventory;
+            case 2:
+                AddFragment add = new AddFragment();
+                return add;
+            case 3:
+                RemoveFragment remove = new RemoveFragment();
+                return remove;
             default:
                 return new InventoryFragment();
         }
@@ -231,18 +238,35 @@ public class MainActivity extends AppCompatActivity
             FragmentManager manager = getSupportFragmentManager();
             manager.beginTransaction().replace(R.id.relative_layout_fragment, inventory).commit();*/
             navItemIndex = 1;
+            Log.d("navItemIndex", navItemIndex + "");
             CURRENT_TAG = TAG_INVENTORY;
+            Log.d("CURRENT_TAG", CURRENT_TAG + "");
         } else if (id == R.id.nav_add) {
             navItemIndex = 2;
+            Log.d("navItemIndex", navItemIndex + "");
+            CURRENT_TAG = TAG_ADD;
+            Log.d("CURRENT_TAG", CURRENT_TAG + "");
         } else if (id == R.id.nav_remove) {
             navItemIndex = 3;
+            Log.d("navItemIndex", navItemIndex + "");
+            CURRENT_TAG = TAG_REMOVE;
+            Log.d("CURRENT_TAG", CURRENT_TAG + "");
         } else if (id == R.id.nav_share) {
             navItemIndex = 4;
         } else if (id == R.id.nav_send) {
             navItemIndex = 5;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (item.isChecked()) {
+            item.setChecked(false);
+        } else {
+            item.setChecked(true);
+        }
+        item.setChecked(true);
+
+        loadFragment();
+
+        //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
