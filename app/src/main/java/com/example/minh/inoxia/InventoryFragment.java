@@ -6,11 +6,25 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ListView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -29,11 +43,18 @@ public class InventoryFragment extends Fragment {
     private Button boutSpeedtiles, boutBackSpeed, boutBacksplashes, boutLoft, boutCare;
     private View myFragmentView;
 
+    private ListView listView;
+    RequestQueue requestQueue;
+
+    private String[] combinedArray;
+    private String combinedText = "";
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
 
     public InventoryFragment() {
         // Required empty public constructor
@@ -64,8 +85,7 @@ public class InventoryFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        //recupererComposante();
-        //ecouterComposante();
+
     }
 
 
@@ -75,10 +95,12 @@ public class InventoryFragment extends Fragment {
 
         // Inflate the layout for this fragment
         myFragmentView = inflater.inflate(R.layout.fragment_inventory, container, false);
-
-
-        recupererComposante();
-        ecouterComposante();
+        listView = (ListView) myFragmentView.findViewById(R.id.buttonView);
+        Log.d("Test", listView + "");
+        requestQueue = Volley.newRequestQueue(getContext());
+        requestQueue.add(jsonObjectRequest);
+        //recupererComposante();
+        //ecouterComposante();
 
         return myFragmentView;
     }
@@ -91,49 +113,60 @@ public class InventoryFragment extends Fragment {
     }
 
     public void recupererComposante() {
-        boutSpeedtiles = (Button) myFragmentView.findViewById(R.id.boutSpeedtiles);
-        boutBackSpeed = (Button) myFragmentView.findViewById(R.id.boutBackSpeed);
-        boutBacksplashes = (Button) myFragmentView.findViewById(R.id.boutBacksplashes);
-        boutLoft = (Button) myFragmentView.findViewById(R.id.boutLoft);
-        boutCare = (Button) myFragmentView.findViewById(R.id.boutCare);
+
+
+    }
+
+    public void initialiserComposante() {
+
     }
 
     public void ecouterComposante() {
-        boutSpeedtiles.setOnClickListener(buttonListener);
-        boutBackSpeed.setOnClickListener(buttonListener);
-        boutBacksplashes.setOnClickListener(buttonListener);
-        boutLoft.setOnClickListener(buttonListener);
-        boutCare.setOnClickListener(buttonListener);
+
     }
 
-    private View.OnClickListener buttonListener = new View.OnClickListener() {
+   /* private View.OnClickListener buttonListener = new View.OnClickListener() {
         @Override
         public void onClick(View vue) {
 
             Intent intent = new Intent(getContext(), Products.class);
+
             switch (vue.getId()) {
                 case R.id.boutSpeedtiles:
                     startActivityForResult(intent, 0);
+                    //loadProductFragment();
                     break;
 
                 case R.id.boutBackSpeed:
                     startActivityForResult(intent, 0);
+                    //loadProductFragment();
                     break;
 
                 case R.id.boutBacksplashes:
                     startActivityForResult(intent, 0);
+                    //loadProductFragment();
                     break;
                 case R.id.boutLoft:
                     startActivityForResult(intent, 0);
+                    //loadProductFragment();
                     break;
                 case R.id.boutCare:
                     startActivityForResult(intent, 0);
+                    //loadProductFragment();
                     break;
                 default:
+
+
                     break;
             }
         }
-    };
+    };*/
+
+    private void loadProductFragment() {
+        ProductFragment product = new ProductFragment();
+        FragmentManager manager = getFragmentManager();
+        manager.beginTransaction().replace(R.id.relative_layout_fragment, product).commit();
+    }
 
     /*@Override
     public void onAttach(Context context) {
@@ -166,4 +199,31 @@ public class InventoryFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,
+            "http://192.168.2.13/inoxia/get_categories.php", new Response.Listener<JSONObject>() {
+        @Override
+        public void onResponse(JSONObject response) {
+            Log.d(response.toString(), response.toString());
+            try {
+                JSONArray categories = response.getJSONArray("categories");
+                for (int i = 0; i < categories.length(); i++) {
+                    JSONObject category = categories.getJSONObject(i);
+                    String category_name = category.getString("name");
+                    combinedText += category_name + "-split-";
+                    combinedArray = combinedText.split("-split-");
+                }
+                MainListAdapter adapter = new MainListAdapter(getActivity(), combinedArray);
+                listView.setAdapter(adapter);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }, new Response.ErrorListener() {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            System.out.println(error);
+        }
+    });
 }

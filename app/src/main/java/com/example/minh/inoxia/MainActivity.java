@@ -181,7 +181,6 @@ public class MainActivity extends AppCompatActivity
 
         // met le bon titre a la toolbar
         setToolbarTitle();
-        Log.d("JE load", "setting toolbar");
 
         if (getSupportFragmentManager().findFragmentByTag(CURRENT_TAG) != null) {
             drawer.closeDrawers();
@@ -194,7 +193,6 @@ public class MainActivity extends AppCompatActivity
             public void run() {
                 // Remplace le fragment present par lui choisi.
                 Fragment fragment = getChosenFragment();
-                Log.d("runnable", fragment + "");
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 fragmentTransaction.setCustomAnimations(android.R.anim.fade_in,
                         android.R.anim.fade_out);

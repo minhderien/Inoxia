@@ -13,7 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import static com.example.minh.inoxia.R.id.boutSpeedtiles;
 import static com.example.minh.inoxia.R.id.editTextNumber;
 
 
